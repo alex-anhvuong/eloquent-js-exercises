@@ -1,0 +1,1 @@
+- Rest parameters take any number of parameters and push them into an array.
