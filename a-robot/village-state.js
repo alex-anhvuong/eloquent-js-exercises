@@ -8,14 +8,20 @@ export default class VillageState {
     }
 
     //  return a state of the village (graph) if the robot decides to move to this destination
+    //  also drop off packages that its destionation is here
     move(destination) {
         if (!roadGraph[this.place].includes(destination)) {
             return this;
         } else {
             let parcels = this.parcels.map(p => {
                 if (p.place != this.place) return p;
+                //  carry along any package that needs to be delivered
                 return { place: destination, address: p.address };
-            }).filter(p => p.place != p.address);  //   packages which are delivered are popped from parcel list
+            }).filter(p => {
+                if (p.place != p.address) return true;
+                console.log('Drop off package');
+                return false;
+            });  //   packages which are delivered are popped from parcel list
             return new VillageState(destination, parcels);
         }
     }
@@ -34,5 +40,6 @@ VillageState.random = function (parcelCount = 5) {
         } while (place == address);
         parcels.push({ place, address });
     }
+    console.log(parcels);
     return new VillageState("Post Office", parcels);
 };
